@@ -73,8 +73,12 @@ public class TurretControl : MonoBehaviour
             firePressed = false;
             if (timeSinceLastCannonball > cannonballCooldown)
             {
-                Instantiate(CannonballPrefab, transform.position, Quaternion.identity);
-                Cannonball newCannonball = GetComponentInChildren<Cannonball>();
+                GameObject initialisedCannonball = Instantiate(CannonballPrefab, transform.position, Quaternion.identity);
+                Cannonball newCannonball = initialisedCannonball.GetComponentInChildren<Cannonball>();
+                if (newCannonball = null)
+                {
+                    Debug.LogError("Could not find component Cannonball!");
+                }
                 newCannonball.SetVector(transform.eulerAngles.z, cannonballSpeed);
             }
         }
