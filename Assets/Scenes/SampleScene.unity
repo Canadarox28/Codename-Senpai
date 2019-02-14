@@ -203,7 +203,7 @@ GameObject:
   - component: {fileID: 270375572}
   - component: {fileID: 270375571}
   m_Layer: 0
-  m_Name: cannon
+  m_Name: Cannon
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -435,7 +435,7 @@ GameObject:
   - component: {fileID: 909631354}
   - component: {fileID: 909631353}
   m_Layer: 0
-  m_Name: fort
+  m_Name: Fort
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -705,7 +705,7 @@ GameObject:
   - component: {fileID: 2014206694}
   - component: {fileID: 2014206693}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -723,6 +723,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05883e55da2d41f4997db34be47c5893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CannonballPrefab: {fileID: 1169797062597229418, guid: c46a8fdfc91c46840bb01bf3a61ea1a4,
+    type: 3}
 --- !u!4 &2014206694
 Transform:
   m_ObjectHideFlags: 0
