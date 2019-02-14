@@ -2,21 +2,18 @@
 
 public class Rocket : MonoBehaviour
 {
-    public float speed;
-    public float angle;
+    private readonly float DestroyBufferHeight = 1f;
+    private readonly float SideBuffer = 1f;
 
-    public float DestroyBufferHeight = 1f;
+    private float ySpeed;
+    private float xSpeed;
 
-    public float SideBuffer = 1f;
-
-    private float yFactor = 1;
-    private float xFactor = 1;
-
-    private bool isAngleSet = false;
+    private bool isVectorSet = false;
     private bool isConfigured = false;
 
     private float offScreenHeight;
     private float offScreenWidth;
+    private float cameraCenterX;
 
     // Start is called before the first frame update
     void Start()
@@ -30,11 +27,11 @@ public class Rocket : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (isAngleSet)
+        if (isVectorSet)
         {
             Vector3 position = this.transform.position;
-            position.x += speed * xFactor * Time.deltaTime;
-            position.y += speed * yFactor * Time.deltaTime;
+            position.x += xSpeed * Time.deltaTime;
+            position.y += ySpeed * Time.deltaTime;
             this.transform.position = position;
         }
 
@@ -45,7 +42,7 @@ public class Rocket : MonoBehaviour
         }
     }
 
-    public void SetAngle(float angle)
+    public void SetVector(float angle, float speed)
     {
         if (!isConfigured)
         {
@@ -61,7 +58,7 @@ public class Rocket : MonoBehaviour
         float maxAngle = (Mathf.Atan(width / (top - bottom)) * Mathf.Rad2Deg);
         float clampedAngle;
 
-        if (this.transform.position.x < 0)
+        if (this.transform.position.x < cameraCenterX)
         {
             maxAngle = -90 - maxAngle;
             clampedAngle = Mathf.Max(maxAngle, angle);
@@ -72,9 +69,12 @@ public class Rocket : MonoBehaviour
             clampedAngle = Mathf.Min(maxAngle, angle);
         }
 
-        yFactor = Mathf.Sin(clampedAngle * Mathf.Deg2Rad);
-        xFactor = Mathf.Cos(clampedAngle * Mathf.Deg2Rad);
-        isAngleSet = true;
+        ySpeed = Mathf.Sin(clampedAngle * Mathf.Deg2Rad) * speed;
+        xSpeed = Mathf.Cos(clampedAngle * Mathf.Deg2Rad) * speed;
+
+        transform.rotation = Quaternion.Euler(0, 0, clampedAngle + 90);
+
+        isVectorSet = true;
     }
 
     /// <summary>
@@ -93,6 +93,7 @@ public class Rocket : MonoBehaviour
         float cameraHeight = camera.orthographicSize * 2f;
         float cameraWidth = cameraHeight * camera.aspect;
         Vector3 cameraCenterPosition = camera.transform.position;
+        cameraCenterX = cameraCenterPosition.x;
 
         offScreenHeight = cameraCenterPosition.y - (cameraHeight / 2f) + DestroyBufferHeight;
         offScreenWidth = cameraCenterPosition.x + (cameraWidth / 2f) - SideBuffer;

@@ -71,7 +71,6 @@ public class RocketSpawner : MonoBehaviour
         {
             Debug.LogError("Rocket component not found!");
         }
-        rocket.speed = Random.Range(RocketSpawnSpeedMin, RocketSpawnSpeedMax);
-        rocket.SetAngle(Random.Range(RocketSpawnAngleMin, RocketSpawnAngleMax));
+        rocket.SetVector(Random.Range(RocketSpawnAngleMin, RocketSpawnAngleMax), Random.Range(RocketSpawnSpeedMin, RocketSpawnSpeedMax));
     }
 }
