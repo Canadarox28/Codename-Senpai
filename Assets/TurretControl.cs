@@ -2,31 +2,17 @@
 
 public class TurretControl : MonoBehaviour
 {
-    public GameObject CannonballPrefab;
-
     private bool leftPressed = false;
     private bool rightPressed = false;
-    private bool firePressed = false;
 
     private readonly float minAngle = 70f;
     private readonly float maxAngle = 290f;
 
     private float angularSpeed = 5f;
-    private float cannonballSpeed = 1f;
-    private float cannonballCooldown = 1f;
-    private float timeSinceLastCannonball = 0f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Graphics and Input
     void Update()
     {
-        timeSinceLastCannonball += Time.deltaTime;
-
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             leftPressed = true;
@@ -34,10 +20,6 @@ public class TurretControl : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             rightPressed = true;
-        }
-        if (Input.GetKey(KeyCode.Space))
-        {
-            firePressed = true;
         }
     }
 
@@ -55,6 +37,8 @@ public class TurretControl : MonoBehaviour
             }
             rotation = new Vector3(0, 0, newRotation);
             transform.eulerAngles = rotation;
+            
+            var childPos = GetComponentInChildren<Renderer>();
         }
         if (rightPressed)
         {
@@ -67,20 +51,8 @@ public class TurretControl : MonoBehaviour
             }
             rotation = new Vector3(0, 0, newRotation);
             transform.eulerAngles = rotation;
-        }
-        if (firePressed)
-        {
-            firePressed = false;
-            if (timeSinceLastCannonball > cannonballCooldown)
-            {
-                GameObject initialisedCannonball = Instantiate(CannonballPrefab, transform.position, Quaternion.identity);
-                Cannonball newCannonball = initialisedCannonball.GetComponentInChildren<Cannonball>();
-                if (newCannonball = null)
-                {
-                    Debug.LogError("Could not find component Cannonball!");
-                }
-                newCannonball.SetVector(transform.eulerAngles.z, cannonballSpeed);
-            }
+            
+            var childPos = GetComponentInChildren<Renderer>();
         }
     }
 }
