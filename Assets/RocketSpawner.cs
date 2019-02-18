@@ -23,6 +23,8 @@ public class RocketSpawner : MonoBehaviour
     private float timeSinceLastSpawn = 0f;
     private float timeToNextSpawn = 0f;
 
+    private readonly float SideBuffer = 1f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,14 +65,50 @@ public class RocketSpawner : MonoBehaviour
     private void SpawnNewRocket()
     {
         timeSinceLastSpawn = 0;
-        Vector3 spawnPosition = this.transform.position;
+        Vector3 spawnPosition = transform.position;
         spawnPosition.x = Random.Range(RocketSpawnPositionMin, RocketSpawnPositionMax);
-        GameObject newRocket = Instantiate(RocketPrefab, spawnPosition, Quaternion.identity, this.transform);
+        float angle = GetRocketAngle(spawnPosition.x);
+        GameObject newRocket = Instantiate(RocketPrefab, spawnPosition, Quaternion.Euler(0f, 0f, angle));
         Rocket rocket = newRocket.GetComponentInChildren<Rocket>();
+        rocket.name = "Rocket";
         if (rocket == null)
         {
             Debug.LogError("Rocket component not found!");
         }
-        rocket.SetVector(Random.Range(RocketSpawnAngleMin, RocketSpawnAngleMax), Random.Range(RocketSpawnSpeedMin, RocketSpawnSpeedMax));
+        rocket.SetSpeed(Random.Range(RocketSpawnSpeedMin, RocketSpawnSpeedMin));
+    }
+
+    private float GetRocketAngle(float spawnPosition)
+    {
+        // TODO: Rockets still leaving screen
+        Camera camera = FindObjectOfType<Camera>();
+
+        if (camera == null)
+        {
+            Debug.LogError("Camera not found!");
+        }
+
+        float cameraHeight = camera.orthographicSize * 2f;
+        float cameraWidth = cameraHeight * camera.aspect;
+        float top = transform.position.y;
+        float bottom = camera.transform.position.y - (cameraHeight / 2f);
+        float offScreenWidth = camera.transform.position.x + (cameraWidth / 2f) - SideBuffer;
+        float width = offScreenWidth - Mathf.Abs(this.transform.position.x);
+
+        float maxAngle = (Mathf.Atan(width / (top - bottom)) * Mathf.Rad2Deg);
+        float clampedAngle;
+
+        if (spawnPosition < camera.transform.position.x)
+        {
+            maxAngle = -90 - maxAngle;
+            clampedAngle = Random.Range(RocketSpawnAngleMin, maxAngle);
+        }
+        else
+        {
+            maxAngle = maxAngle - 90;
+            clampedAngle = Random.Range(maxAngle, RocketSpawnAngleMax);
+        }
+
+        return clampedAngle + 90;
     }
 }

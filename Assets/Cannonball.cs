@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Cannonball : MonoBehaviour
 {
-    private float xSpeed;
-    private float ySpeed;
+    private float speed;
 
-    private float offScreenHeight;
-    private float offScreenWidth;
+    private float offScreenUp;
+    private float offScreenRight;
+    private float offScreenLeft;
     private float cameraCenterX;
 
     private bool isConfigured = false;
@@ -27,17 +25,29 @@ public class Cannonball : MonoBehaviour
     {
         if (isVectorSet)
         {
-            Vector3 position = transform.position;
-            position.y += ySpeed * Time.deltaTime;
-            position.x += xSpeed * Time.deltaTime;
-            transform.position = position;
+            transform.Translate(0f, speed * Time.deltaTime, 0f);
+        }
+        if (transform.position.y >= offScreenUp 
+            || transform.position.x >= offScreenRight 
+            || transform.position.x <= offScreenLeft)
+        {
+            // Cannonball is off screen
+            Destroy(gameObject);
         }
     }
 
-    public void SetVector(float angle, float speed)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        ySpeed = Mathf.Sin((angle + 90) * Mathf.Deg2Rad) * speed;
-        xSpeed = Mathf.Cos((angle + 90) * Mathf.Deg2Rad) * speed;
+        if (collision.name == "Rocket")         // bullet hits rocket
+        {
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+        }
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
         isVectorSet = true;
     }
 
@@ -53,14 +63,15 @@ public class Cannonball : MonoBehaviour
         {
             Debug.LogError("Camera not found!");
         }
-
+        
         float cameraHeight = camera.orthographicSize * 2f;
         float cameraWidth = cameraHeight * camera.aspect;
         Vector3 cameraCenterPosition = camera.transform.position;
         cameraCenterX = cameraCenterPosition.x;
 
-        offScreenHeight = cameraCenterPosition.y + (cameraHeight / 2f);
-        offScreenWidth = cameraCenterPosition.x + (cameraWidth / 2f);
+        offScreenUp = cameraCenterPosition.y + (cameraHeight / 2f);
+        offScreenRight = cameraCenterPosition.x + (cameraWidth / 2f);
+        offScreenLeft = cameraCenterPosition.x - (cameraWidth / 2f);
 
         isConfigured = true;
     }

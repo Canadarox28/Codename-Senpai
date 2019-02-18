@@ -63,7 +63,7 @@ public class TurretCannon : MonoBehaviour
                 {
                     Debug.LogError("Could not find component Cannonball!");
                 }
-                newCannonball.SetVector(transform.eulerAngles.z, cannonballSpeed);
+                newCannonball.SetSpeed(cannonballSpeed);
 
                 timeSinceLastCannonball = 0f;
             }

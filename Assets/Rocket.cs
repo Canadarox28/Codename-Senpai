@@ -5,8 +5,7 @@ public class Rocket : MonoBehaviour
     private readonly float DestroyBufferHeight = 1f;
     private readonly float SideBuffer = 1f;
 
-    private float ySpeed;
-    private float xSpeed;
+    private float speed;
 
     private bool isVectorSet = false;
     private bool isConfigured = false;
@@ -25,55 +24,23 @@ public class Rocket : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (isVectorSet)
         {
-            Vector3 position = this.transform.position;
-            position.x += xSpeed * Time.deltaTime;
-            position.y += ySpeed * Time.deltaTime;
-            this.transform.position = position;
+            transform.Translate(0f, -speed * Time.deltaTime, 0f);
         }
 
-        if (this.transform.position.y <= offScreenHeight)
+        if (transform.position.y <= offScreenHeight)
         {
             // Rocket hits base
             Destroy(gameObject);
         }
     }
 
-    public void SetVector(float angle, float speed)
+    public void SetSpeed(float speed)
     {
-        if (!isConfigured)
-        {
-            ConfigureCameraPosition();
-        }
-
-        //Ensure rocket will not fly off screen to the sides
-        float top = this.transform.position.y;
-        float bottom = offScreenHeight;
-        float width = offScreenWidth - Mathf.Abs(this.transform.position.x);
-        
-        // Ensure the rocket does not spawn with an angle that will bring it off screen
-        float maxAngle = (Mathf.Atan(width / (top - bottom)) * Mathf.Rad2Deg);
-        float clampedAngle;
-
-        if (this.transform.position.x < cameraCenterX)
-        {
-            maxAngle = -90 - maxAngle;
-            clampedAngle = Mathf.Max(maxAngle, angle);
-        }
-        else
-        {
-            maxAngle = maxAngle - 90;
-            clampedAngle = Mathf.Min(maxAngle, angle);
-        }
-
-        ySpeed = Mathf.Sin(clampedAngle * Mathf.Deg2Rad) * speed;
-        xSpeed = Mathf.Cos(clampedAngle * Mathf.Deg2Rad) * speed;
-
-        transform.rotation = Quaternion.Euler(0, 0, clampedAngle + 90);
-
+        this.speed = speed;
         isVectorSet = true;
     }
 
