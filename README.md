@@ -5,8 +5,8 @@ Codename: Senpai is a unity remake of an old Javascript game created for a schoo
 ## Plot
 Montreal has declared war on Toronto, and missiles are inbound! With only an antiquated anti-air emplacement at your disposal, it is up to you to protect the city from the onslaught. Stay alive as long as you can, and enlist the help of other Torontonians to upgrade your defenses.
 
-## Features
-Randomly generated missiles fall from the sky, and a fixed-placement rotation cannon controlled by the player fires projectiles to destroy them.
+## Gameplay in a Nutshell
+Randomly placed missiles fall from the sky, and a fixed-placement rotation cannon controlled by the player fires projectiles to destroy them.
 
 ## Stretch goals
 - A day/night cycle: Gameplay during the day, a shop screen with upgrades at night.
