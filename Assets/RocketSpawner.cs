@@ -92,22 +92,18 @@ public class RocketSpawner : MonoBehaviour
         float cameraWidth = cameraHeight * camera.aspect;
         float top = transform.position.y;
         float bottom = camera.transform.position.y - (cameraHeight / 2f);
-        float offScreenWidth = camera.transform.position.x + (cameraWidth / 2f) - SideBuffer;
-        float width = offScreenWidth - Mathf.Abs(this.transform.position.x);
+        float screenEndpointRight = camera.transform.position.x + (cameraWidth / 2f) - SideBuffer;
+        float screenEndpointLeft = camera.transform.position.x - (cameraWidth / 2f) + SideBuffer;
 
-        float maxAngle = (Mathf.Atan(width / (top - bottom)) * Mathf.Rad2Deg);
-        float clampedAngle;
+        float widthToRight = screenEndpointRight - spawnPosition;
+        float maxAngleRight = (Mathf.Atan(widthToRight / (top - bottom)) * Mathf.Rad2Deg) - 90;
+        maxAngleRight = Mathf.Min(maxAngleRight, RocketSpawnAngleMin);
 
-        if (spawnPosition < camera.transform.position.x)
-        {
-            maxAngle = -90 - maxAngle;
-            clampedAngle = Random.Range(RocketSpawnAngleMin, maxAngle);
-        }
-        else
-        {
-            maxAngle = maxAngle - 90;
-            clampedAngle = Random.Range(maxAngle, RocketSpawnAngleMax);
-        }
+        float widthToLeft = spawnPosition - screenEndpointLeft;
+        float maxAngleLeft = -90 - (Mathf.Atan(widthToLeft / (top - bottom)) * Mathf.Rad2Deg);
+        maxAngleLeft = Mathf.Max(maxAngleLeft, RocketSpawnAngleMax);
+
+        float clampedAngle = Random.Range(maxAngleRight, maxAngleLeft);
 
         return clampedAngle + 90;
     }
