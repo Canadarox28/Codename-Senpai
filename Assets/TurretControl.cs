@@ -2,13 +2,13 @@
 
 public class TurretControl : MonoBehaviour
 {
+    [System.NonSerialized] public float angularSpeed = 5f;
+
     private bool leftPressed = false;
     private bool rightPressed = false;
 
     private readonly float minAngle = 70f;
     private readonly float maxAngle = 290f;
-
-    private float angularSpeed = 5f;
 
     // Graphics and Input
     void Update()
@@ -37,8 +37,6 @@ public class TurretControl : MonoBehaviour
             }
             rotation = new Vector3(0, 0, newRotation);
             transform.eulerAngles = rotation;
-            
-            var childPos = GetComponentInChildren<Renderer>();
         }
         if (rightPressed)
         {
@@ -51,8 +49,6 @@ public class TurretControl : MonoBehaviour
             }
             rotation = new Vector3(0, 0, newRotation);
             transform.eulerAngles = rotation;
-            
-            var childPos = GetComponentInChildren<Renderer>();
         }
     }
 }

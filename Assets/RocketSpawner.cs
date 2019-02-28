@@ -6,16 +6,16 @@ public class RocketSpawner : MonoBehaviour
 {
     public GameObject RocketPrefab;
 
-    public float RocketSpawnDelaySecondsMin = 2f;
-    public float RocketSpawnDelaySecondsMax = 5f;
+    [System.NonSerialized] public float RocketSpawnDelaySecondsMin = 2f;
+    [System.NonSerialized] public float RocketSpawnDelaySecondsMax = 5f;
 
-    public float RocketSpawnSpeedMin = 0.5f;
-    public float RocketSpawnSpeedMax = 1f;
+    [System.NonSerialized] public float RocketSpawnSpeedMin = 0.5f;
+    [System.NonSerialized] public float RocketSpawnSpeedMax = 1f;
 
-    public float RocketSpawnAngleMin = -80f;
-    public float RocketSpawnAngleMax = -100f;
+    [System.NonSerialized] public float RocketSpawnAngleMaxLeft = -10f;
+    [System.NonSerialized] public float RocketSpawnAngleMaxRight = 10f;
 
-    public float RocketSpawnEdgeBuffer = 1f;
+    [System.NonSerialized] public float RocketSpawnEdgeBuffer = 1f;
 
     private float RocketSpawnPositionMin;
     private float RocketSpawnPositionMax;
@@ -51,20 +51,15 @@ public class RocketSpawner : MonoBehaviour
         if (timeSinceLastSpawn >= timeToNextSpawn)
         {
             SpawnNewRocket();
-            GetNextSpawnTime();
+            timeSinceLastSpawn = 0;
+            timeToNextSpawn = Random.Range(RocketSpawnDelaySecondsMin, RocketSpawnDelaySecondsMax);
         }
 
         timeSinceLastSpawn += Time.deltaTime;
     }
 
-    private void GetNextSpawnTime()
-    {
-        timeToNextSpawn = Random.Range(RocketSpawnDelaySecondsMin, RocketSpawnDelaySecondsMax);
-    }
-
     private void SpawnNewRocket()
     {
-        timeSinceLastSpawn = 0;
         Vector3 spawnPosition = transform.position;
         spawnPosition.x = Random.Range(RocketSpawnPositionMin, RocketSpawnPositionMax);
         float angle = GetRocketAngle(spawnPosition.x);
@@ -80,7 +75,6 @@ public class RocketSpawner : MonoBehaviour
 
     private float GetRocketAngle(float spawnPosition)
     {
-        // TODO: Rockets still leaving screen
         Camera camera = FindObjectOfType<Camera>();
 
         if (camera == null)
@@ -96,15 +90,15 @@ public class RocketSpawner : MonoBehaviour
         float screenEndpointLeft = camera.transform.position.x - (cameraWidth / 2f) + SideBuffer;
 
         float widthToRight = screenEndpointRight - spawnPosition;
-        float maxAngleRight = (Mathf.Atan(widthToRight / (top - bottom)) * Mathf.Rad2Deg) - 90;
-        maxAngleRight = Mathf.Min(maxAngleRight, RocketSpawnAngleMin);
+        float maxAngleRight = (Mathf.Atan(widthToRight / (top - bottom)) * Mathf.Rad2Deg);
+        maxAngleRight = Mathf.Min(maxAngleRight, RocketSpawnAngleMaxLeft);
 
         float widthToLeft = spawnPosition - screenEndpointLeft;
-        float maxAngleLeft = -90 - (Mathf.Atan(widthToLeft / (top - bottom)) * Mathf.Rad2Deg);
-        maxAngleLeft = Mathf.Max(maxAngleLeft, RocketSpawnAngleMax);
+        float maxAngleLeft = -(Mathf.Atan(widthToLeft / (top - bottom)) * Mathf.Rad2Deg);
+        maxAngleLeft = Mathf.Max(maxAngleLeft, RocketSpawnAngleMaxRight);
 
         float clampedAngle = Random.Range(maxAngleRight, maxAngleLeft);
 
-        return clampedAngle + 90;
+        return clampedAngle;
     }
 }

@@ -40,7 +40,8 @@ public class Cannonball : MonoBehaviour
     {
         if (collision.name == "Rocket")         // bullet hits rocket
         {
-            Destroy(collision.gameObject);
+            Rocket rocket = collision.gameObject.GetComponent<Rocket>();
+            rocket.OnHit();
             Destroy(gameObject);
         }
     }

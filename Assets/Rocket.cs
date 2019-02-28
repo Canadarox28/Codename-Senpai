@@ -3,30 +3,21 @@
 public class Rocket : MonoBehaviour
 {
     private readonly float DestroyBufferHeight = 1f;
-    private readonly float SideBuffer = 1f;
 
     private float speed;
-
-    private bool isVectorSet = false;
-    private bool isConfigured = false;
-
+    private bool isSpeedSet = false;
     private float offScreenHeight;
-    private float offScreenWidth;
-    private float cameraCenterX;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (!isConfigured)
-        {
-            ConfigureCameraPosition();
-        }
+        ConfigureCameraPosition();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isVectorSet)
+        if (isSpeedSet)
         {
             transform.Translate(0f, -speed * Time.deltaTime, 0f);
         }
@@ -41,12 +32,17 @@ public class Rocket : MonoBehaviour
     public void SetSpeed(float speed)
     {
         this.speed = speed;
-        isVectorSet = true;
+        isSpeedSet = true;
+    }
+
+    public void OnHit()
+    {
+        // Todo: Variable health, etc
+        Destroy(gameObject);
     }
 
     /// <summary>
-    /// Get the position and size of the camera, with a buffer.
-    /// Save values to globals offScreenHeight and offScreenWidth.
+    /// Get the position and size of the camera, with a buffer to determine where the rocket should explode.
     /// </summary>
     private void ConfigureCameraPosition()
     {
@@ -60,11 +56,7 @@ public class Rocket : MonoBehaviour
         float cameraHeight = camera.orthographicSize * 2f;
         float cameraWidth = cameraHeight * camera.aspect;
         Vector3 cameraCenterPosition = camera.transform.position;
-        cameraCenterX = cameraCenterPosition.x;
 
         offScreenHeight = cameraCenterPosition.y - (cameraHeight / 2f) + DestroyBufferHeight;
-        offScreenWidth = cameraCenterPosition.x + (cameraWidth / 2f) - SideBuffer;
-
-        isConfigured = true;
     }
 }
