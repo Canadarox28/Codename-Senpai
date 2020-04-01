@@ -7,11 +7,13 @@ public class Rocket : MonoBehaviour
     private float speed;
     private bool isSpeedSet = false;
     private float offScreenHeight;
+    public ScoreController ScoreController;
 
     // Start is called before the first frame update
     void Start()
     {
         ConfigureCameraPosition();
+        ScoreController = FindObjectOfType<ScoreController>();
     }
 
     // Update is called once per frame
@@ -25,6 +27,7 @@ public class Rocket : MonoBehaviour
         if (transform.position.y <= offScreenHeight)
         {
             // Rocket hits base
+            ScoreController.AddHealth(-10);
             Destroy(gameObject);
         }
     }
@@ -38,6 +41,7 @@ public class Rocket : MonoBehaviour
     public void OnHit()
     {
         // Todo: Variable health, etc
+        ScoreController.AddScore(10);
         Destroy(gameObject);
     }
 

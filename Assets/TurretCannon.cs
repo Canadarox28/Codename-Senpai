@@ -11,7 +11,7 @@ public class TurretCannon : MonoBehaviour
 
     private bool firePressed = false;
 
-    private float cannonballSpeed = 1f;
+    private float cannonballSpeed = 5f;
     private float cannonballCooldown = 1f;
     private float timeSinceLastCannonball = 0f;
 
